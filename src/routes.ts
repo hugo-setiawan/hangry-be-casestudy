@@ -2,7 +2,13 @@ import http from "http";
 
 import { respondWithError } from "./misc";
 import { StatusCodes } from "http-status-codes";
-import { getAllUsersHandler, postUserHandler } from "./handlers";
+import {
+  deleteSpecificUserHandler,
+  getAllUsersHandler,
+  getSpecificUserHandler,
+  postUserHandler,
+  putSpecificUserHandler,
+} from "./handlers";
 
 export const routeRequest = (
   requestBody: string,
@@ -20,7 +26,6 @@ export const routeRequest = (
   }
 
   let parsedBody;
-
   try {
     parsedBody = JSON.parse(requestBody);
   } catch (e) {
@@ -44,20 +49,17 @@ export const routeRequest = (
         break;
     }
   } else if (/^\/user\/[^/]+$/.test(req.url)) {
-    const userReference = req.url.split("/")[2];
+    // this should be safe since we tested the url for the second part using the above regex
+    const userReference = req.url.split("/")[2]!;
 
     switch (req.method) {
       case "GET":
-        console.log("GET USER specific");
-        return;
-
+        return getSpecificUserHandler(userReference, req, res);
       case "PUT":
-        console.log("PUT USER specfic");
-        return;
+        return putSpecificUserHandler(userReference, parsedBody, req, res);
 
       case "DELETE":
-        console.log("DELETE USER specfic");
-        return;
+        return deleteSpecificUserHandler(userReference, req, res);
 
       default:
         break;
