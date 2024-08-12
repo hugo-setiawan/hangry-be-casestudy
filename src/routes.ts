@@ -69,7 +69,7 @@ export const routeRequest = (
   // catch-all handler when incoming URL doesn't match any path
   return respondWithError(
     StatusCodes.NOT_FOUND,
-    `No handler for path ${req.url}`,
+    `Cannot ${req.method} ${req.url}`,
     req,
     res
   );
