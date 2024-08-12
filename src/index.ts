@@ -1,7 +1,7 @@
-import http from 'http';
+import http from "http";
 
-import 'dotenv/config';
-import { routeRequest } from './routes';
+import "dotenv/config";
+import { routeRequest } from "./routes";
 
 /**
  * Logika untuk menangani dan menanggapi request dituliskan pada fungsi ini
@@ -27,9 +27,9 @@ const requestListener = (
 };
 
 const port = parseInt(process.env.SERVER_PORT!) || 8000;
-const host = process.env.SERVER_HOST ?? '0.0.0.0';
+const host = process.env.SERVER_HOST ?? "0.0.0.0";
 
 const server = http.createServer(requestListener);
 server.listen(port, host, () => {
-    console.log(`Server is listening on http://${host}:${port}`);
+  console.log(`Server is listening on http://${host}:${port}`);
 });
