@@ -23,7 +23,7 @@ export const postUserHandler = (
   const parsedDob = new Date(dob);
 
   const newUser: User = {
-    id: "123",
+    id: crypto.randomUUID(),
     name,
     email,
     dateOfBirth: parsedDob,
