@@ -8,8 +8,17 @@ export const routeRequest = (
 ) => {
   res.setHeader("Content-Type", "application/json");
 
-  if (!req.url) {
-    return respondWithError(StatusCodes.INTERNAL_SERVER_ERROR, "no req.url", req, res);
+  let parsedBody;
+
+  try {
+    parsedBody = JSON.parse(requestBody);
+  } catch (e) {
+    return respondWithError(
+      StatusCodes.BAD_REQUEST,
+      "Bad request body: request body must be valid JSON!",
+      req,
+      res
+    );
   }
 
   if (req.url === "/user") {

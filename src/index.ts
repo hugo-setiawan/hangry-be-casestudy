@@ -9,8 +9,21 @@ import { routeRequest } from './routes';
  * @param request: objek yang berisikan informasi terkait permintaan
  * @param response: objek yang digunakan untuk menanggapi permintaan
  */
-const requestListener = (req: http.IncomingMessage, res: http.ServerResponse) => {
-    return routeRequest(req, res);
+const requestListener = (
+  req: http.IncomingMessage,
+  res: http.ServerResponse
+) => {
+  // fetch full request body first before deferring to router
+  let body: Buffer[] = [];
+
+  req.on("data", (chunk) => {
+    body.push(chunk);
+  });
+
+  req.on("end", () => {
+    const parsedBody = Buffer.concat(body).toString();
+    routeRequest(parsedBody, req, res);
+  });
 };
 
 const port = parseInt(process.env.SERVER_PORT!) || 8000;
