@@ -10,6 +10,14 @@ import {
   putSpecificUserHandler,
 } from "./handlers";
 
+/**
+ * Routes the incoming HTTP request to the appropriate handler based on the URL and HTTP request method.
+ *
+ * @param {string} requestBody - The body of the incoming request.
+ * @param {http.IncomingMessage} req - The incoming request object.
+ * @param {http.ServerResponse} res - The server response object.
+ * @returns {Promise<void>} A promise that resolves when the response has been processed and sent.
+ */
 export const routeRequest = async (
   requestBody: string,
   req: http.IncomingMessage,

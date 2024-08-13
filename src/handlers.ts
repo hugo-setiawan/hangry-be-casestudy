@@ -4,6 +4,16 @@ import { respondWithError, respondWithJson } from "./misc";
 import { db } from "./db";
 import { StatusCodes } from "http-status-codes";
 
+/**
+ * Handles the creation of a new user.
+ *
+ * @param {Object} requestBody - The request body containing user information.
+ * @param {string} requestBody.name - The name of the user.
+ * @param {string} requestBody.email - The email of the user.
+ * @param {string} requestBody.dateOfBirth - The date of birth of the user in YYYY-MM-DDTHH:mm:ss.sss+HH:mm format.
+ * @param {ServerResponse} res - The server response object.
+ * @returns {Promise<void>} A promise that resolves when the response has been processed and sent.
+ */
 export const postUserHandler = async (
   requestBody: any,
   res: ServerResponse
@@ -42,11 +52,24 @@ export const postUserHandler = async (
   return respondWithJson({ user: newUser }, res, StatusCodes.CREATED);
 };
 
+/**
+ * Retrieves all users from the database.
+ *
+ * @param {ServerResponse} res - The server response object.
+ * @returns {Promise<void>} A promise that resolves when the response has been processed and sent.
+ */
 export const getAllUsersHandler = async (res: ServerResponse) => {
   const allUsers = await db.user.findMany();
   return respondWithJson({ users: allUsers }, res);
 };
 
+/**
+ * Retrieves a specific user by their ID.
+ *
+ * @param {string} userId - The ID of the user to retrieve.
+ * @param {ServerResponse} res - The server response object.
+ * @returns {Promise<void>} A promise that resolves when the response has been processed and sent.
+ */
 export const getSpecificUserHandler = async (
   userId: string,
   res: ServerResponse
@@ -68,6 +91,17 @@ export const getSpecificUserHandler = async (
   return respondWithJson({ user: userQuery }, res);
 };
 
+/**
+ * Updates a specific user's information.
+ *
+ * @param {string} userReference - The ID of the user to update.
+ * @param {Object} requestBody - The request body containing updated user information.
+ * @param {string} [requestBody.name] - The new name of the user (optional).
+ * @param {string} [requestBody.email] - The new email of the user (optional).
+ * @param {string} [requestBody.dateOfBirth] - The new date of birth of the user in YYYY-MM-DDTHH:mm:ss.sss+HH:mm format (optional).
+ * @param {ServerResponse} res - The server response object.
+ * @returns {Promise<void>} A promise that resolves when the response has been processed and sent.
+ */
 export const putSpecificUserHandler = async (
   userId: string,
   requestBody: any,
@@ -126,6 +160,13 @@ export const putSpecificUserHandler = async (
   return respondWithJson({ user: updatedUser }, res);
 };
 
+/**
+ * Deletes a specific user from the database.
+ *
+ * @param {string} userId - The ID of the user to delete.
+ * @param {ServerResponse} res - The server response object.
+ * @returns {Promise<void>} A promise that resolves when the response has been processed and sent.
+ */
 export const deleteSpecificUserHandler = async (
   userId: string,
   res: ServerResponse

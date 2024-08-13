@@ -3,6 +3,13 @@ import http from "http";
 import "dotenv/config";
 import { routeRequest } from "./routes";
 
+/**
+ * Serves incoming HTTP requests by collecting the request body and then
+ * passing it to the router function for processing.
+ *
+ * @param {http.IncomingMessage} req - The incoming request object.
+ * @param {http.ServerResponse} res - The server response object.
+ */
 const requestListener = (
   req: http.IncomingMessage,
   res: http.ServerResponse
