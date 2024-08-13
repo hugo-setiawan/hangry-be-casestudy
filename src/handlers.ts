@@ -8,15 +8,15 @@ export const postUserHandler = async (
   requestBody: any,
   res: ServerResponse
 ) => {
-  const { name, email, dob } = requestBody;
+  const { name, email, dateOfBirth } = requestBody;
 
-  if (!name || !email || !dob) {
+  if (!name || !email || !dateOfBirth) {
     return respondWithError(400, "Missing request body attributes!", res);
   }
 
   // expects js date format: YYYY-MM-DDTHH:mm:ss.sss+HH:mm
-  // if Date.parse(dob) is NaN, it means dob can't be parsed as Date
-  if (isNaN(Date.parse(dob))) {
+  // if Date.parse(dateOfBirth) is NaN, it means dob can't be parsed as Date
+  if (isNaN(Date.parse(dateOfBirth))) {
     return respondWithError(400, "Invalid date format!", res);
   }
 
@@ -35,7 +35,7 @@ export const postUserHandler = async (
     data: {
       name,
       email,
-      dateOfBirth: new Date(dob),
+      dateOfBirth: new Date(dateOfBirth),
     },
   });
 
@@ -43,7 +43,6 @@ export const postUserHandler = async (
 };
 
 export const getAllUsersHandler = async (res: ServerResponse) => {
-  // query db
   const allUsers = await db.user.findMany();
   return respondWithJson({ users: allUsers }, res);
 };
@@ -52,7 +51,6 @@ export const getSpecificUserHandler = async (
   userReference: string,
   res: ServerResponse
 ) => {
-  // query db
   const userQuery = await db.user.findUnique({
     where: {
       id: userReference,
@@ -75,7 +73,7 @@ export const putSpecificUserHandler = async (
   requestBody: any,
   res: ServerResponse
 ) => {
-  const { name: newName, email: newEmail, dob: newDob } = requestBody;
+  const { name: newName, email: newEmail, dateOfBirth: newDob } = requestBody;
 
   const userQuery = await db.user.findUnique({
     where: {
@@ -118,8 +116,6 @@ export const putSpecificUserHandler = async (
       : { dateOfBirth: userQuery.dateOfBirth }),
   };
 
-  // remove existing data in memory db (using indexOf) and splice in the new one
-  // userDb.splice(userQueryIndex, 1, newUserData);
   const updatedUser = await db.user.update({
     where: {
       id: userReference,
