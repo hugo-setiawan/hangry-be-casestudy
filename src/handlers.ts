@@ -128,12 +128,8 @@ export const deleteSpecificUserHandler = (
   }
 
   // remove the referenced data from the db
-  userDb.splice(userQueryIndex, 1);
+  const removedUser = userDb.splice(userQueryIndex, 1);
 
-  return respondWithJson(
-    {
-      message: `Successfuly deleted user with ID ${userReference}`,
-    },
-    res
-  );
+  // accessing 0-th index directly here should be safe, it's guaranteed to exist after the above validation
+  return respondWithJson({ deletedUser: removedUser[0] }, res);
 };
