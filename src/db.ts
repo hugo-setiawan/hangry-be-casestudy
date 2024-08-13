@@ -1,5 +1,3 @@
-import { type User } from "./types";
+import { PrismaClient } from "@prisma/client";
 
-// TODO: consider using (no)sql
-// In-memory user database implementation using arrays
-export const userDb: User[] = [];
+export const db = new PrismaClient();

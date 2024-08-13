@@ -10,7 +10,7 @@ import {
   putSpecificUserHandler,
 } from "./handlers";
 
-export const routeRequest = (
+export const routeRequest = async (
   requestBody: string,
   req: http.IncomingMessage,
   res: http.ServerResponse

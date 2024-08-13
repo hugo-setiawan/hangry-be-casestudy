@@ -20,9 +20,9 @@ const requestListener = (
     body.push(chunk);
   });
 
-  req.on("end", () => {
+  req.on("end", async () => {
     const parsedBody = Buffer.concat(body).toString();
-    routeRequest(parsedBody, req, res);
+    await routeRequest(parsedBody, req, res);
   });
 };
 

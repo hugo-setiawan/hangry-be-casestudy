@@ -1,11 +1,10 @@
 import { ServerResponse } from "http";
 
 import { respondWithError, respondWithJson } from "./misc";
-import { userDb } from "./db";
-import { type User } from "./types";
+import { db } from "./db";
 import { StatusCodes } from "http-status-codes";
 
-export const postUserHandler = (
+export const postUserHandler = async (
   requestBody: any,
   res: ServerResponse
 ) => {
@@ -21,35 +20,43 @@ export const postUserHandler = (
     return respondWithError(400, "Invalid date format!", res);
   }
 
-  const parsedDob = new Date(dob);
+  // handle unique constraint on email
+  const existingUser = await db.user.findUnique({
+    where: {
+      email,
+    },
+  });
 
-  const newUser: User = {
-    id: crypto.randomUUID(),
-    name,
-    email,
-    dateOfBirth: parsedDob,
-  };
+  if (existingUser) {
+    return respondWithError(400, "User with same email already exists", res);
+  }
 
-  userDb.push(newUser);
+  const newUser = await db.user.create({
+    data: {
+      name,
+      email,
+      dateOfBirth: new Date(dob),
+    },
+  });
 
   return respondWithJson({ user: newUser }, res);
 };
 
-export const getAllUsersHandler = (
-  res: ServerResponse
-) => {
+export const getAllUsersHandler = async (res: ServerResponse) => {
   // query db
-  const allUsers = userDb;
+  const allUsers = await db.user.findMany();
   return respondWithJson({ users: allUsers }, res);
 };
 
-export const getSpecificUserHandler = (
+export const getSpecificUserHandler = async (
   userReference: string,
   res: ServerResponse
 ) => {
   // query db
-  const userQuery = userDb.find((user) => {
-    return user.id === userReference;
+  const userQuery = await db.user.findUnique({
+    where: {
+      id: userReference,
+    },
   });
 
   if (!userQuery) {
@@ -63,20 +70,17 @@ export const getSpecificUserHandler = (
   return respondWithJson({ user: userQuery }, res);
 };
 
-export const putSpecificUserHandler = (
+export const putSpecificUserHandler = async (
   userReference: string,
   requestBody: any,
   res: ServerResponse
 ) => {
   const { name: newName, email: newEmail, dob: newDob } = requestBody;
 
-  // query db
-  const userQuery = userDb.find((user) => {
-    return user.id === userReference;
-  });
-
-  const userQueryIndex = userDb.findIndex((user) => {
-    return user.id === userReference;
+  const userQuery = await db.user.findUnique({
+    where: {
+      id: userReference,
+    },
   });
 
   if (!userQuery) {
@@ -93,10 +97,20 @@ export const putSpecificUserHandler = (
     return respondWithError(400, "Invalid date format!", res);
   }
 
+  // handle unique constraint on email
+  const existingUser = await db.user.findUnique({
+    where: {
+      email: newEmail,
+    },
+  });
+
+  if (existingUser) {
+    return respondWithError(400, "User with same email already exists", res);
+  }
+
   // only replace the existing data IF the new data (in this case: when newName, newEmail or newDob) is set
   // else, just use the existing data from userQuery
   const newUserData = {
-    id: userQuery.id,
     ...(newName ? { name: newName } : { name: userQuery.name }),
     ...(newEmail ? { email: newEmail } : { email: userQuery.email }),
     ...(newDob
@@ -105,21 +119,28 @@ export const putSpecificUserHandler = (
   };
 
   // remove existing data in memory db (using indexOf) and splice in the new one
-  userDb.splice(userQueryIndex, 1, newUserData);
+  // userDb.splice(userQueryIndex, 1, newUserData);
+  const updatedUser = await db.user.update({
+    where: {
+      id: userReference,
+    },
+    data: newUserData,
+  });
 
-  return respondWithJson({ user: newUserData }, res);
+  return respondWithJson({ user: updatedUser }, res);
 };
 
-export const deleteSpecificUserHandler = (
+export const deleteSpecificUserHandler = async (
   userReference: string,
   res: ServerResponse
 ) => {
-  // query db
-  const userQueryIndex = userDb.findIndex((user) => {
-    return user.id === userReference;
+  const userQuery = await db.user.findUnique({
+    where: {
+      id: userReference,
+    },
   });
 
-  if (userQueryIndex === -1) {
+  if (!userQuery) {
     return respondWithError(
       StatusCodes.NOT_FOUND,
       `User with ID ${userReference} not found!`,
@@ -128,8 +149,11 @@ export const deleteSpecificUserHandler = (
   }
 
   // remove the referenced data from the db
-  const removedUser = userDb.splice(userQueryIndex, 1);
+  const removedUser = await db.user.delete({
+    where: {
+      id: userReference,
+    },
+  });
 
-  // accessing 0-th index directly here should be safe, it's guaranteed to exist after the above validation
-  return respondWithJson({ deletedUser: removedUser[0] }, res);
+  return respondWithJson({ deletedUser: removedUser }, res);
 };
