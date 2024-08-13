@@ -54,17 +54,17 @@ export const routeRequest = async (
     // "/user/:id" URL handler
   } else if (/^\/user\/[^/]+$/.test(req.url)) {
     // this should be safe since we tested the url for the second part using the above regex
-    const userReference = req.url.split("/")[2]!;
+    const userId = req.url.split("/")[2]!;
 
     switch (req.method) {
       case "GET":
-        return getSpecificUserHandler(userReference, res);
+        return getSpecificUserHandler(userId, res);
 
       case "PUT":
-        return putSpecificUserHandler(userReference, parsedBody, res);
+        return putSpecificUserHandler(userId, parsedBody, res);
 
       case "DELETE":
-        return deleteSpecificUserHandler(userReference, res);
+        return deleteSpecificUserHandler(userId, res);
 
       default:
         break;

@@ -48,19 +48,19 @@ export const getAllUsersHandler = async (res: ServerResponse) => {
 };
 
 export const getSpecificUserHandler = async (
-  userReference: string,
+  userId: string,
   res: ServerResponse
 ) => {
   const userQuery = await db.user.findUnique({
     where: {
-      id: userReference,
+      id: userId,
     },
   });
 
   if (!userQuery) {
     return respondWithError(
       StatusCodes.NOT_FOUND,
-      `User with ID ${userReference} not found!`,
+      `User with ID ${userId} not found!`,
       res
     );
   }
@@ -69,7 +69,7 @@ export const getSpecificUserHandler = async (
 };
 
 export const putSpecificUserHandler = async (
-  userReference: string,
+  userId: string,
   requestBody: any,
   res: ServerResponse
 ) => {
@@ -77,14 +77,14 @@ export const putSpecificUserHandler = async (
 
   const userQuery = await db.user.findUnique({
     where: {
-      id: userReference,
+      id: userId,
     },
   });
 
   if (!userQuery) {
     return respondWithError(
       StatusCodes.NOT_FOUND,
-      `User with ID ${userReference} not found!`,
+      `User with ID ${userId} not found!`,
       res
     );
   }
@@ -118,7 +118,7 @@ export const putSpecificUserHandler = async (
 
   const updatedUser = await db.user.update({
     where: {
-      id: userReference,
+      id: userId,
     },
     data: newUserData,
   });
@@ -127,19 +127,19 @@ export const putSpecificUserHandler = async (
 };
 
 export const deleteSpecificUserHandler = async (
-  userReference: string,
+  userId: string,
   res: ServerResponse
 ) => {
   const userQuery = await db.user.findUnique({
     where: {
-      id: userReference,
+      id: userId,
     },
   });
 
   if (!userQuery) {
     return respondWithError(
       StatusCodes.NOT_FOUND,
-      `User with ID ${userReference} not found!`,
+      `User with ID ${userId} not found!`,
       res
     );
   }
@@ -147,7 +147,7 @@ export const deleteSpecificUserHandler = async (
   // remove the referenced data from the db
   const removedUser = await db.user.delete({
     where: {
-      id: userReference,
+      id: userId,
     },
   });
 
