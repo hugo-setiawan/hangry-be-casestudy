@@ -91,9 +91,9 @@ export const putSpecificUserHandler = async (
     );
   }
 
-  // validate newDob first
+  // validate newDob first (if it exists)
   // if Date.parse(dob) is NaN, it means dob can't be parsed as Date
-  if (isNaN(Date.parse(newDob))) {
+  if (newDob && isNaN(Date.parse(newDob))) {
     return respondWithError(400, "Invalid date format!", res);
   }
 
