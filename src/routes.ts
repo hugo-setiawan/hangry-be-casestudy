@@ -25,15 +25,18 @@ export const routeRequest = async (
   }
 
   let parsedBody;
-  try {
-    parsedBody = JSON.parse(requestBody);
-  } catch (e) {
-    return respondWithError(
-      StatusCodes.BAD_REQUEST,
-      "Bad request body: request body must be valid JSON!",
-      res
-    );
+  if (requestBody) {
+    try {
+      parsedBody = JSON.parse(requestBody);
+    } catch (e) {
+      return respondWithError(
+        StatusCodes.BAD_REQUEST,
+        "Bad request body: request body must be valid JSON!",
+        res
+      );
+    }
   }
+
 
   // "/user" URL handler
   if (req.url === "/user") {
