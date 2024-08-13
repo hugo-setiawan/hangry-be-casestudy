@@ -129,13 +129,17 @@ export const putSpecificUserHandler = async (
     return respondWithError(400, "Invalid date format!", res);
   }
 
-  // handle unique constraint on email
+  // handle unique constraint: check if another user in the db already uses the email we want to update to
   const existingUser = await db.user.findUnique({
     where: {
       email: newEmail,
+      NOT: {
+        id: userQuery.id,
+      },
     },
   });
 
+  //
   if (existingUser) {
     return respondWithError(400, "User with same email already exists", res);
   }
