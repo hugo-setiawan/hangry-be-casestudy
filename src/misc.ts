@@ -18,7 +18,11 @@ export const respondWithError = (
   );
 };
 
-export const respondWithJson = (data: Object, res: http.ServerResponse, statusCode = StatusCodes.OK) => {
+export const respondWithJson = (
+  data: Object,
+  res: http.ServerResponse,
+  statusCode = StatusCodes.OK
+) => {
   res.statusCode = statusCode;
 
   res.setHeader("Content-Type", "application/json");

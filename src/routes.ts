@@ -48,7 +48,7 @@ export const routeRequest = async (
         break;
     }
 
-  // "/user/:id" URL handler
+    // "/user/:id" URL handler
   } else if (/^\/user\/[^/]+$/.test(req.url)) {
     // this should be safe since we tested the url for the second part using the above regex
     const userReference = req.url.split("/")[2]!;

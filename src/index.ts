@@ -3,12 +3,6 @@ import http from "http";
 import "dotenv/config";
 import { routeRequest } from "./routes";
 
-/**
- * Logika untuk menangani dan menanggapi request dituliskan pada fungsi ini
- *
- * @param request: objek yang berisikan informasi terkait permintaan
- * @param response: objek yang digunakan untuk menanggapi permintaan
- */
 const requestListener = (
   req: http.IncomingMessage,
   res: http.ServerResponse
