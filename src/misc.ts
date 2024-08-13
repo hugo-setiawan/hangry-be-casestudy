@@ -18,14 +18,14 @@ export const respondWithError = (
   );
 };
 
-export const respondWithJson = (data: Object, res: http.ServerResponse) => {
-  res.statusCode = StatusCodes.OK;
+export const respondWithJson = (data: Object, res: http.ServerResponse, statusCode = StatusCodes.OK) => {
+  res.statusCode = statusCode;
 
   res.setHeader("Content-Type", "application/json");
 
   res.end(
     JSON.stringify({
-      status: "OK",
+      status: getReasonPhrase(statusCode),
       data,
     })
   );

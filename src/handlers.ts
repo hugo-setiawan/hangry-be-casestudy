@@ -39,7 +39,7 @@ export const postUserHandler = async (
     },
   });
 
-  return respondWithJson({ user: newUser }, res);
+  return respondWithJson({ user: newUser }, res, StatusCodes.CREATED);
 };
 
 export const getAllUsersHandler = async (res: ServerResponse) => {
