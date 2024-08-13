@@ -13,13 +13,13 @@ export const postUserHandler = (
   const { name, email, dob } = requestBody;
 
   if (!name || !email || !dob) {
-    return respondWithError(400, "Missing request body attributes!", req, res);
+    return respondWithError(400, "Missing request body attributes!", res);
   }
 
   // expects js date format: YYYY-MM-DDTHH:mm:ss.sss+HH:mm
   // if Date.parse(dob) is NaN, it means dob can't be parsed as Date
   if (isNaN(Date.parse(dob))) {
-    return respondWithError(400, "Invalid date format!", req, res);
+    return respondWithError(400, "Invalid date format!", res);
   }
 
   const parsedDob = new Date(dob);
@@ -33,7 +33,7 @@ export const postUserHandler = (
 
   userDb.push(newUser);
 
-  return respondWithJson({ user: newUser }, req, res);
+  return respondWithJson({ user: newUser }, res);
 };
 
 export const getAllUsersHandler = (
@@ -42,7 +42,7 @@ export const getAllUsersHandler = (
 ) => {
   // query db
   const allUsers = userDb;
-  return respondWithJson({ users: allUsers }, req, res);
+  return respondWithJson({ users: allUsers }, res);
 };
 
 export const getSpecificUserHandler = (
@@ -59,12 +59,11 @@ export const getSpecificUserHandler = (
     return respondWithError(
       StatusCodes.NOT_FOUND,
       `User with ID ${userReference} not found!`,
-      req,
       res
     );
   }
 
-  return respondWithJson({ user: userQuery }, req, res);
+  return respondWithJson({ user: userQuery }, res);
 };
 
 export const putSpecificUserHandler = (
@@ -88,7 +87,6 @@ export const putSpecificUserHandler = (
     return respondWithError(
       StatusCodes.NOT_FOUND,
       `User with ID ${userReference} not found!`,
-      req,
       res
     );
   }
@@ -96,7 +94,7 @@ export const putSpecificUserHandler = (
   // validate newDob first
   // if Date.parse(dob) is NaN, it means dob can't be parsed as Date
   if (isNaN(Date.parse(newDob))) {
-    return respondWithError(400, "Invalid date format!", req, res);
+    return respondWithError(400, "Invalid date format!", res);
   }
 
   // only replace the existing data IF the new data (in this case: when newName, newEmail or newDob) is set
@@ -113,7 +111,7 @@ export const putSpecificUserHandler = (
   // remove existing data in memory db (using indexOf) and splice in the new one
   userDb.splice(userQueryIndex, 1, newUserData);
 
-  return respondWithJson({ user: newUserData }, req, res);
+  return respondWithJson({ user: newUserData }, res);
 };
 
 export const deleteSpecificUserHandler = (
@@ -130,7 +128,6 @@ export const deleteSpecificUserHandler = (
     return respondWithError(
       StatusCodes.NOT_FOUND,
       `User with ID ${userReference} not found!`,
-      req,
       res
     );
   }
@@ -142,7 +139,6 @@ export const deleteSpecificUserHandler = (
     {
       message: `Successfuly deleted user with ID ${userReference}`,
     },
-    req,
     res
   );
 };

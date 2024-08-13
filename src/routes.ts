@@ -20,7 +20,6 @@ export const routeRequest = (
     return respondWithError(
       StatusCodes.INTERNAL_SERVER_ERROR,
       "Invalid request",
-      req,
       res
     );
   }
@@ -32,7 +31,6 @@ export const routeRequest = (
     return respondWithError(
       StatusCodes.BAD_REQUEST,
       "Bad request body: request body must be valid JSON!",
-      req,
       res
     );
   }
@@ -55,6 +53,7 @@ export const routeRequest = (
     switch (req.method) {
       case "GET":
         return getSpecificUserHandler(userReference, req, res);
+
       case "PUT":
         return putSpecificUserHandler(userReference, parsedBody, req, res);
 
@@ -70,7 +69,6 @@ export const routeRequest = (
   return respondWithError(
     StatusCodes.NOT_FOUND,
     `Cannot ${req.method} ${req.url}`,
-    req,
     res
   );
 };
