@@ -12,8 +12,8 @@ This README.md file provides an overview of the application, stack, development 
 
 ## Assumptions Made
 
-- `id` is generated server-side when the user data is saved for the very first time. In this case, i used UUID(v4) for the ids.
-- A unique constraint exists for the user's `email`.
+- **ID Generation**: User IDs are generated server-side. In this case, i am using UUIDs for the user's IDs.
+- **Email Uniqueness**: Each user's email address must be unique across the system.
 
 ## Application Overview
 
@@ -27,14 +27,14 @@ This application is a RESTful API designed to manage user data with the followin
 
 The data managed by the API includes:
 
-- `id`: A unique identifier for the user (automatically generated).
-- `name`: The user's full name.
-- `email`: The user's email address (must be unique).
-- `dateOfBirth`: The user's date of birth.
+- `id` (string): A unique identifier for the user (automatically generated).
+- `name` (string): The user's full name.
+- `email` (string): The user's email address (must be unique).
+- `dateOfBirth` (Date): The user's date of birth.
 
-To view more details and to test the API, you can use the Postman workspace I have created. Import the following link into Postman to get a pre-configured set of requests for the API:
+To view more details and to test the API, you can use the Postman collection I have created. Open the following link to view some API documentation and get a pre-configured set of requests for the API:
 
-[Postman Workspace](https://www.postman.com/hugosset/workspace/hangry-backend-case-study)
+[Postman Documentation & Requests](https://www.postman.com/hugosset/workspace/hangry-backend-case-study/documentation/23397272-bbc5f628-5714-4048-b229-fc7978629858)
 
 ## Tech Stack
 
@@ -51,9 +51,9 @@ The application follows the following structure:
 /src
 ├── index.ts      # Main entry point of the application
 ├── routes.ts     # Route definitions and handlers
-├── handlers.ts   # Functions for handling business logic and user requests
-├── db.ts         # Provides an client interface for interacting with the database
-├── misc.ts       # Stores miscellaneous functions that can be utilized throughout the app
+├── handlers.ts   # Business logic and user request handlers
+├── db.ts         # Database client interface (Prisma)
+└── misc.ts       # Miscellaneous utility functions
 ```
 
 ## Development Preparation
@@ -62,6 +62,6 @@ To set up the development environment, follow these steps:
 
 1. Clone the repository.
 2. Run `npm install` to install the required dependencies.
-3. Setup local versions of the required environment variables, by using `.env.example` as a template.
-4. Push any schema changes to the local SQLite database by running `npx prisma db push`. This also generates the Prisma Client for use.
+3. Setup local versions of the required environment variables into `.env`, by using `.env.example` as a template.
+4. Push any schema changes to the local SQLite database by running `npx prisma db push`. This also generates and prepares the Prisma Client for use.
 5. Run the application in development mode (with auto-reload, but no type-checking) by using `npm run dev`.
