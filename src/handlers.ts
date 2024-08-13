@@ -1,4 +1,4 @@
-import { type IncomingMessage, ServerResponse } from "http";
+import { ServerResponse } from "http";
 
 import { respondWithError, respondWithJson } from "./misc";
 import { userDb } from "./db";
@@ -7,7 +7,6 @@ import { StatusCodes } from "http-status-codes";
 
 export const postUserHandler = (
   requestBody: any,
-  req: IncomingMessage,
   res: ServerResponse
 ) => {
   const { name, email, dob } = requestBody;
@@ -37,7 +36,6 @@ export const postUserHandler = (
 };
 
 export const getAllUsersHandler = (
-  req: IncomingMessage,
   res: ServerResponse
 ) => {
   // query db
@@ -47,7 +45,6 @@ export const getAllUsersHandler = (
 
 export const getSpecificUserHandler = (
   userReference: string,
-  req: IncomingMessage,
   res: ServerResponse
 ) => {
   // query db
@@ -69,7 +66,6 @@ export const getSpecificUserHandler = (
 export const putSpecificUserHandler = (
   userReference: string,
   requestBody: any,
-  req: IncomingMessage,
   res: ServerResponse
 ) => {
   const { name: newName, email: newEmail, dob: newDob } = requestBody;
@@ -116,7 +112,6 @@ export const putSpecificUserHandler = (
 
 export const deleteSpecificUserHandler = (
   userReference: string,
-  req: IncomingMessage,
   res: ServerResponse
 ) => {
   // query db

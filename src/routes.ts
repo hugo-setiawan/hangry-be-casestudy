@@ -35,30 +35,33 @@ export const routeRequest = (
     );
   }
 
+  // "/user" URL handler
   if (req.url === "/user") {
     switch (req.method) {
       case "POST":
-        return postUserHandler(parsedBody, req, res);
+        return postUserHandler(parsedBody, res);
 
       case "GET":
-        return getAllUsersHandler(req, res);
+        return getAllUsersHandler(res);
 
       default:
         break;
     }
+
+  // "/user/:id" URL handler
   } else if (/^\/user\/[^/]+$/.test(req.url)) {
     // this should be safe since we tested the url for the second part using the above regex
     const userReference = req.url.split("/")[2]!;
 
     switch (req.method) {
       case "GET":
-        return getSpecificUserHandler(userReference, req, res);
+        return getSpecificUserHandler(userReference, res);
 
       case "PUT":
-        return putSpecificUserHandler(userReference, parsedBody, req, res);
+        return putSpecificUserHandler(userReference, parsedBody, res);
 
       case "DELETE":
-        return deleteSpecificUserHandler(userReference, req, res);
+        return deleteSpecificUserHandler(userReference, res);
 
       default:
         break;
