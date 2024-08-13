@@ -1,8 +1,8 @@
-import { ServerResponse } from "http";
+import { type ServerResponse } from "http";
+import { StatusCodes } from "http-status-codes";
 
 import { respondWithError, respondWithJson } from "./misc";
 import { db } from "./db";
-import { StatusCodes } from "http-status-codes";
 
 /**
  * Handles the creation of a new user.
@@ -74,13 +74,13 @@ export const getSpecificUserHandler = async (
   userId: string,
   res: ServerResponse
 ) => {
-  const userQuery = await db.user.findUnique({
+  const queriedUser = await db.user.findUnique({
     where: {
       id: userId,
     },
   });
 
-  if (!userQuery) {
+  if (!queriedUser) {
     return respondWithError(
       StatusCodes.NOT_FOUND,
       `User with ID ${userId} not found!`,
@@ -88,7 +88,7 @@ export const getSpecificUserHandler = async (
     );
   }
 
-  return respondWithJson({ user: userQuery }, res);
+  return respondWithJson({ user: queriedUser }, res);
 };
 
 /**
@@ -102,20 +102,20 @@ export const getSpecificUserHandler = async (
  * @param {ServerResponse} res - The server response object.
  * @returns {Promise<void>} A promise that resolves when the response has been processed and sent.
  */
-export const putSpecificUserHandler = async (
+export const updateSpecificUserHandler = async (
   userId: string,
   requestBody: any,
   res: ServerResponse
 ) => {
   const { name: newName, email: newEmail, dateOfBirth: newDob } = requestBody;
 
-  const userQuery = await db.user.findUnique({
+  const queriedUser = await db.user.findUnique({
     where: {
       id: userId,
     },
   });
 
-  if (!userQuery) {
+  if (!queriedUser) {
     return respondWithError(
       StatusCodes.NOT_FOUND,
       `User with ID ${userId} not found!`,
@@ -130,28 +130,27 @@ export const putSpecificUserHandler = async (
   }
 
   // handle unique constraint: check if another user in the db already uses the email we want to update to
-  const existingUser = await db.user.findUnique({
+  const differentUserWithSameEmail = await db.user.findUnique({
     where: {
       email: newEmail,
       NOT: {
-        id: userQuery.id,
+        id: queriedUser.id,
       },
     },
   });
 
-  //
-  if (existingUser) {
+  if (differentUserWithSameEmail) {
     return respondWithError(400, "User with same email already exists", res);
   }
 
   // only replace the existing data IF the new data (in this case: when newName, newEmail or newDob) is set
   // else, just use the existing data from userQuery
   const newUserData = {
-    ...(newName ? { name: newName } : { name: userQuery.name }),
-    ...(newEmail ? { email: newEmail } : { email: userQuery.email }),
+    ...(newName ? { name: newName } : { name: queriedUser.name }),
+    ...(newEmail ? { email: newEmail } : { email: queriedUser.email }),
     ...(newDob
       ? { dateOfBirth: new Date(newDob) }
-      : { dateOfBirth: userQuery.dateOfBirth }),
+      : { dateOfBirth: queriedUser.dateOfBirth }),
   };
 
   const updatedUser = await db.user.update({
@@ -175,13 +174,13 @@ export const deleteSpecificUserHandler = async (
   userId: string,
   res: ServerResponse
 ) => {
-  const userQuery = await db.user.findUnique({
+  const queriedUser = await db.user.findUnique({
     where: {
       id: userId,
     },
   });
 
-  if (!userQuery) {
+  if (!queriedUser) {
     return respondWithError(
       StatusCodes.NOT_FOUND,
       `User with ID ${userId} not found!`,
@@ -190,11 +189,11 @@ export const deleteSpecificUserHandler = async (
   }
 
   // remove the referenced data from the db
-  const removedUser = await db.user.delete({
+  const deletedUser = await db.user.delete({
     where: {
       id: userId,
     },
   });
 
-  return respondWithJson({ deletedUser: removedUser }, res);
+  return respondWithJson({ deletedUser }, res);
 };

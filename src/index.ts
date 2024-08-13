@@ -1,6 +1,6 @@
 import http from "http";
-
 import "dotenv/config";
+
 import { routeRequest } from "./routes";
 
 /**

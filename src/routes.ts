@@ -1,13 +1,13 @@
 import http from "http";
+import { StatusCodes } from "http-status-codes";
 
 import { respondWithError } from "./misc";
-import { StatusCodes } from "http-status-codes";
 import {
   deleteSpecificUserHandler,
   getAllUsersHandler,
   getSpecificUserHandler,
   postUserHandler,
-  putSpecificUserHandler,
+  updateSpecificUserHandler,
 } from "./handlers";
 
 /**
@@ -32,10 +32,10 @@ export const routeRequest = async (
     );
   }
 
-  let parsedBody;
+  let jsonBody;
   if (requestBody) {
     try {
-      parsedBody = JSON.parse(requestBody);
+      jsonBody = JSON.parse(requestBody);
     } catch (e) {
       return respondWithError(
         StatusCodes.BAD_REQUEST,
@@ -45,12 +45,11 @@ export const routeRequest = async (
     }
   }
 
-
   // "/user" URL handler
   if (req.url === "/user") {
     switch (req.method) {
       case "POST":
-        return postUserHandler(parsedBody, res);
+        return postUserHandler(jsonBody, res);
 
       case "GET":
         return getAllUsersHandler(res);
@@ -69,7 +68,7 @@ export const routeRequest = async (
         return getSpecificUserHandler(userId, res);
 
       case "PUT":
-        return putSpecificUserHandler(userId, parsedBody, res);
+        return updateSpecificUserHandler(userId, jsonBody, res);
 
       case "DELETE":
         return deleteSpecificUserHandler(userId, res);

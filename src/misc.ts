@@ -1,4 +1,4 @@
-import http from "http";
+import { type ServerResponse } from "http";
 import { getReasonPhrase, StatusCodes } from "http-status-codes";
 
 /**
@@ -6,13 +6,13 @@ import { getReasonPhrase, StatusCodes } from "http-status-codes";
  *
  * @param {StatusCodes} errorCode - The HTTP status code for the error.
  * @param {string} message - The error message to be sent in the response.
- * @param {http.ServerResponse} res - The server response object.
+ * @param {ServerResponse} res - The server response object.
  * @returns {void}
  */
 export const respondWithError = (
   errorCode: StatusCodes,
   message: string,
-  res: http.ServerResponse
+  res: ServerResponse
 ) => {
   res.statusCode = errorCode;
 
@@ -30,13 +30,13 @@ export const respondWithError = (
  * Sends a JSON response with the specified data and status code.
  *
  * @param {Object} data - The data to be sent in the response.
- * @param {http.ServerResponse} res - The server response object.
+ * @param {ServerResponse} res - The server response object.
  * @param {StatusCodes} [statusCode=StatusCodes.OK] - The HTTP status code for the response (default is 200 OK).
  * @returns {void}
  */
 export const respondWithJson = (
   data: Object,
-  res: http.ServerResponse,
+  res: ServerResponse,
   statusCode = StatusCodes.OK
 ) => {
   res.statusCode = statusCode;
