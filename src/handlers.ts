@@ -18,6 +18,10 @@ export const postUserHandler = async (
   requestBody: any,
   res: ServerResponse
 ) => {
+  if (!requestBody) {
+    return respondWithError(400, "Missing request body!", res);
+  }
+
   const { name, email, dateOfBirth } = requestBody;
 
   if (!name || !email || !dateOfBirth) {
@@ -107,6 +111,10 @@ export const updateSpecificUserHandler = async (
   requestBody: any,
   res: ServerResponse
 ) => {
+  if (!requestBody) {
+    return respondWithError(400, "Missing request body!", res);
+  }
+
   const { name: newName, email: newEmail, dateOfBirth: newDob } = requestBody;
 
   const queriedUser = await db.user.findUnique({
