@@ -19,19 +19,31 @@ export const postUserHandler = async (
   res: ServerResponse
 ) => {
   if (!requestBody) {
-    return respondWithError(400, "Missing request body!", res);
+    return respondWithError(
+      StatusCodes.BAD_REQUEST,
+      "Missing request body!",
+      res
+    );
   }
 
   const { name, email, dateOfBirth } = requestBody;
 
   if (!name || !email || !dateOfBirth) {
-    return respondWithError(400, "Missing request body attributes!", res);
+    return respondWithError(
+      StatusCodes.BAD_REQUEST,
+      "Missing request body attributes!",
+      res
+    );
   }
 
   // expects js date format: YYYY-MM-DDTHH:mm:ss.sss+HH:mm
   // if Date.parse(dateOfBirth) is NaN, it means dob can't be parsed as Date
   if (isNaN(Date.parse(dateOfBirth))) {
-    return respondWithError(400, "Invalid date format!", res);
+    return respondWithError(
+      StatusCodes.BAD_REQUEST,
+      "Invalid date format!",
+      res
+    );
   }
 
   // handle unique constraint on email
@@ -42,7 +54,11 @@ export const postUserHandler = async (
   });
 
   if (existingUser) {
-    return respondWithError(400, "User with same email already exists", res);
+    return respondWithError(
+      StatusCodes.BAD_REQUEST,
+      "User with same email already exists",
+      res
+    );
   }
 
   const newUser = await db.user.create({
@@ -112,7 +128,11 @@ export const updateSpecificUserHandler = async (
   res: ServerResponse
 ) => {
   if (!requestBody) {
-    return respondWithError(400, "Missing request body!", res);
+    return respondWithError(
+      StatusCodes.BAD_REQUEST,
+      "Missing request body!",
+      res
+    );
   }
 
   const { name: newName, email: newEmail, dateOfBirth: newDob } = requestBody;
@@ -134,7 +154,11 @@ export const updateSpecificUserHandler = async (
   // validate newDob first (if it exists)
   // if Date.parse(dob) is NaN, it means dob can't be parsed as Date
   if (newDob && isNaN(Date.parse(newDob))) {
-    return respondWithError(400, "Invalid date format!", res);
+    return respondWithError(
+      StatusCodes.BAD_REQUEST,
+      "Invalid date format!",
+      res
+    );
   }
 
   // handle unique constraint: check if another user in the db already uses the email we want to update to
@@ -148,7 +172,11 @@ export const updateSpecificUserHandler = async (
   });
 
   if (differentUserWithSameEmail) {
-    return respondWithError(400, "User with same email already exists", res);
+    return respondWithError(
+      StatusCodes.BAD_REQUEST,
+      "User with same email already exists",
+      res
+    );
   }
 
   // only replace the existing data IF the new data (in this case: when newName, newEmail or newDob) is set
