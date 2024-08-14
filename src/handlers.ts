@@ -152,7 +152,7 @@ export const updateSpecificUserHandler = async (
   }
 
   // only replace the existing data IF the new data (in this case: when newName, newEmail or newDob) is set
-  // else, just use the existing data from userQuery
+  // else, just use the existing data from queriedUser
   const newUserData = {
     ...(newName ? { name: newName } : { name: queriedUser.name }),
     ...(newEmail ? { email: newEmail } : { email: queriedUser.email }),
@@ -196,7 +196,6 @@ export const deleteSpecificUserHandler = async (
     );
   }
 
-  // remove the referenced data from the db
   const deletedUser = await db.user.delete({
     where: {
       id: userId,
