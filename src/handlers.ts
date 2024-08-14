@@ -137,6 +137,15 @@ export const updateSpecificUserHandler = async (
 
   const { name: newName, email: newEmail, dateOfBirth: newDob } = requestBody;
 
+  // handle case where request body doesn't have any of the to-be-updated attributes
+  if (!newName && !newEmail && !newDob) {
+    return respondWithError(
+      StatusCodes.BAD_REQUEST,
+      "Missing request body attribute!",
+      res
+    );
+  }
+
   const queriedUser = await db.user.findUnique({
     where: {
       id: userId,
